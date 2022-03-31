@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import Tailwind from "./Tailwind.svelte";
@@ -30,7 +30,7 @@
   // for test purpose
   onMount(async () => {
     try {
-      const res = await fetch("/test.pdf");
+      const res = await fetch("/DocsCard.pdf");
       const pdfBlob = await res.blob();
       await addPDF(pdfBlob);
       selectedPageIndex = 0;
@@ -64,7 +64,7 @@
       pdfName = file.name;
       pdfFile = file;
       const numPages = pdf.numPages;
-      pages = Array(numPages)
+      pages = (Array(numPages) as any)
         .fill()
         .map((_, i) => pdf.getPage(i + 1));
       allObjects = pages.map(() => []);
@@ -127,6 +127,7 @@
     allObjects = allObjects.map((objects, pIndex) =>
       pIndex === selectedPageIndex ? [...objects, object] : objects
     );
+    updateObject(id, {lines: [text], width: object.width});
   }
   function onAddDrawing() {
     if (selectedPageIndex >= 0) {
@@ -239,6 +240,7 @@
         <img src="notes.svg" alt="An icon for adding text" />
       </label>
       <label
+        for=""
         class="flex items-center justify-center h-full w-8 hover:bg-gray-500
         cursor-pointer"
         on:click={onAddDrawing}
@@ -263,11 +265,6 @@
       class:bg-blue-700={pages.length === 0 || saving || !pdfFile}>
       {saving ? 'Saving' : 'Save'}
     </button>
-    <a href="https://github.com/ShizukuIchi/pdf-editor">
-      <img
-        src="/GitHub-Mark-32px.png"
-        alt="A GitHub icon leads to personal GitHub page" />
-    </a>
   </div>
   {#if addingDrawing}
     <div

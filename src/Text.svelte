@@ -34,7 +34,8 @@
     }
     dispatch("update", {
       x: x + dx,
-      y: y + dy
+      y: y + dy,
+      size: _size
     });
     dx = 0;
     dy = 0;
@@ -49,14 +50,17 @@
     operation = "edit";
   }
   async function onBlur() {
-    if (operation !== "edit" || operation === "tool") return;
+    // if (operation !== "edit" || operation === "tool") return;
     editable.blur();
     sanitize();
     dispatch("update", {
       lines: extractLines(),
       width: editable.clientWidth
     });
-    operation = "";
+    if(operation === "edit") {
+      operation = "";
+    }
+    // operation = "";
   }
   async function onPaste(e) {
     // get text only
