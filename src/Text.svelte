@@ -252,7 +252,7 @@
     on:paste|preventDefault={onPaste}
     contenteditable="true"
     spellcheck="false"
-    class="outline-none whitespace-no-wrap"
+    class="outline-none whitespace-nowrap"
     style="font-size: {_size}px; font-family: '{_fontFamily}', serif;
     line-height: {_lineHeight}; -webkit-user-select: text;" />
 </div>

@@ -1,4 +1,5 @@
 module.exports = {
+  content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
     extend: {},
     cursor: {
@@ -30,5 +31,8 @@ module.exports = {
   variants: {
     margin: ['responsive', 'hover', 'focus'],
   },
-  plugins: [],
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: ["corporate", "business"]
+  }
 };

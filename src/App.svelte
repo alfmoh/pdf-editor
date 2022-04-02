@@ -16,6 +16,7 @@
   } from "./utils/asyncReader.js";
   import { ggID } from "./utils/helper.js";
   import { save } from "./utils/PDF.js";
+import Sidebar from "./core/Sidebar.svelte";
   const genID = ggID();
   let pdfFile;
   let pdfName = "";
@@ -197,7 +198,7 @@
   on:dragover|preventDefault
   on:drop|preventDefault={onUploadPDF} />
 <Tailwind />
-<main class="flex flex-col items-center py-16 bg-gray-100 min-h-screen">
+<main class="flex flex-col bg-gray-100 min-h-screen">
   <div
     class="fixed z-10 top-0 left-0 right-0 h-12 flex justify-center items-center
     bg-gray-200 border-b border-gray-300">
@@ -294,8 +295,11 @@
         class="flex-grow bg-transparent"
         bind:value={pdfName} />
     </div>
-    <div class="w-full">
-      {#each pages as page, pIndex (page)}
+    
+    <div class="w-full flex pt-12">
+      <Sidebar />
+      <div class="w-full">
+        {#each pages as page, pIndex (page)}
         <div
           class="p-5 w-full flex flex-col items-center overflow-hidden"
           on:mousedown={() => selectPage(pIndex)}
@@ -351,6 +355,7 @@
           </div>
         </div>
       {/each}
+      </div>
     </div>
   {:else}
     <div class="w-full flex-grow flex justify-center items-center">
