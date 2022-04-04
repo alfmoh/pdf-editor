@@ -1,10 +1,11 @@
 <script>
-  import { onMount, createEventDispatcher } from "svelte";
+  import { onMount, createEventDispatcher, onDestroy } from "svelte";
   import Toolbar from "./Toolbar.svelte";
   import { pannable } from "./utils/pannable.js";
   import { tapout } from "./utils/tapout.js";
   import { timeout } from "./utils/helper.js";
   import { Fonts } from "./utils/prepareAssets.js";
+  import { isEdit } from "./shared/store/store.ts";
   export let size;
   export let text;
   export let lineHeight;
@@ -47,8 +48,9 @@
     operation = "move";
   }
   function onFocus() {
-    operation = "edit";
-  }
+      operation = "edit";
+      isEdit.set(true);
+    }
   async function onBlur() {
     // if (operation !== "edit" || operation === "tool") return;
     editable.blur();
@@ -59,6 +61,7 @@
     });
     if(operation === "edit") {
       operation = "";
+      isEdit.set(false);
     }
     // operation = "";
   }
@@ -109,14 +112,19 @@
   }
   async function onBlurTool() {
     if (operation !== "tool" || operation === "edit") return;
+    pageUpdate();
+    operation = "";
+    isEdit.set(false);
+  }
+  function pageUpdate() {
     dispatch("update", {
       lines: extractLines(),
       lineHeight: _lineHeight,
       size: _size,
       fontFamily: _fontFamily
     });
-    operation = "";
   }
+
   function sanitize() {
     let weirdNode;
     while (
@@ -154,8 +162,19 @@
   }
   function onDelete() {
     dispatch("delete");
+    isEdit.set(false);
   }
+
+  const unsub = isEdit.subscribe( (value) => {
+    if(editable) {
+      if(!value) {
+      pageUpdate();
+      operation = "";
+    }
+    }
+  })
   onMount(render);
+  onDestroy(unsub);
 </script>
 
 <style>

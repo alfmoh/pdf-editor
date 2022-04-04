@@ -17,6 +17,7 @@
   import { ggID } from "./utils/helper.js";
   import { save } from "./utils/PDF.js";
 import Sidebar from "./core/Sidebar.svelte";
+import { isEdit } from "./shared/store/store";
   const genID = ggID();
   let pdfFile;
   let pdfName = "";
@@ -191,9 +192,16 @@ import Sidebar from "./core/Sidebar.svelte";
       saving = false;
     }
   }
+
+  function onEscape(event: KeyboardEvent) {
+    if(event.key === 'Escape') {
+      isEdit.set(false);
+    }
+  }
 </script>
 
 <svelte:window
+  on:keydown={onEscape}
   on:dragenter|preventDefault
   on:dragover|preventDefault
   on:drop|preventDefault={onUploadPDF} />
